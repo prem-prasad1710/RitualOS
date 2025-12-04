@@ -1,0 +1,245 @@
+// RitualOS Database Schema
+// This schema defines the data model for the micro-ritual operating system
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String
+  focusGoal     String?   // e.g., "Study", "Work", "Startup", "Health"
+  streakCount   Int       @default(0)
+  totalPoints   Int       @default(0)
+  level         Int       @default(1)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  rituals       Ritual[]
+  ritualLoops   RitualLoop[]
+  sessions      RitualSession[]
+  journalEntries JournalEntry[]
+  achievements   UserAchievement[]
+  challenges     UserChallenge[]
+  circleMembers  CircleMember[]
+  sentMessages   ChatMessage[] @relation("SentMessages")
+}
+
+model Ritual {
+  id              String   @id @default(cuid())
+  userId          String
+  name            String
+  category        String   // "Focus", "Reset", "Social", "Sleep", "Custom"
+  durationMinutes Int
+  moodTag         String?  // "Anxious", "Tired", "Overwhelmed", "Energized"
+  description     String?
+  isPublic        Boolean  @default(false)
+  isTemplate      Boolean  @default(false)
+  templateUses    Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  loopSteps       RitualLoopStep[]
+  
+  @@index([userId])
+  @@index([isTemplate])
+}
+
+model RitualLoop {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  isPublic    Boolean  @default(false)
+  isTemplate  Boolean  @default(false)
+  templateUses Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  steps       RitualLoopStep[]
+  sessions    RitualSession[]
+  
+  @@index([userId])
+  @@index([isTemplate])
+}
+
+model RitualLoopStep {
+  id        String @id @default(cuid())
+  loopId    String
+  ritualId  String
+  order     Int
+  
+  loop      RitualLoop @relation(fields: [loopId], references: [id], onDelete: Cascade)
+  ritual    Ritual     @relation(fields: [ritualId], references: [id], onDelete: Cascade)
+  
+  @@index([loopId])
+  @@index([ritualId])
+}
+
+model RitualSession {
+  id                    String    @id @default(cuid())
+  userId                String
+  loopId                String?
+  startedAt             DateTime  @default(now())
+  completedAt           DateTime?
+  selfReportedMoodBefore String?  // 1-5 scale or mood tag
+  selfReportedMoodAfter  String?  // 1-5 scale or mood tag
+  pointsEarned          Int       @default(0)
+  
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  loop                  RitualLoop? @relation(fields: [loopId], references: [id], onDelete: SetNull)
+  reflections           RitualReflection[]
+  
+  @@index([userId])
+  @@index([loopId])
+}
+
+model RitualReflection {
+  id        String @id @default(cuid())
+  sessionId String
+  question  String
+  answer    String
+  
+  session   RitualSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@index([sessionId])
+}
+
+// NEW: Journal Entries for deeper reflection
+model JournalEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  content   String
+  mood      String?  // Current mood tag
+  energy    Int?     // 1-5 scale
+  tags      String?  // Comma-separated tags
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// NEW: Achievements system
+model Achievement {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  icon        String
+  category    String // "Streak", "Completion", "Social", "Special"
+  requirement Int    // Number needed to unlock
+  points      Int    // Points awarded
+  
+  users       UserAchievement[]
+  
+  @@unique([name])
+}
+
+model UserAchievement {
+  id            String   @id @default(cuid())
+  userId        String
+  achievementId String
+  unlockedAt    DateTime @default(now())
+  
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, achievementId])
+  @@index([userId])
+}
+
+// NEW: Challenges system
+model Challenge {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  duration    Int      // Days
+  loopId      String?  // Optional recommended loop
+  difficulty  String   // "Easy", "Medium", "Hard"
+  points      Int      // Points for completion
+  startDate   DateTime
+  endDate     DateTime
+  
+  users       UserChallenge[]
+  
+  @@index([startDate])
+  @@index([endDate])
+}
+
+model UserChallenge {
+  id          String    @id @default(cuid())
+  userId      String
+  challengeId String
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  progress    Int       @default(0) // Days completed
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, challengeId])
+  @@index([userId])
+}
+
+// NEW: Social Circles for accountability
+model Circle {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  inviteCode  String   @unique
+  createdAt   DateTime @default(now())
+  
+  members     CircleMember[]
+}
+
+model CircleMember {
+  id        String   @id @default(cuid())
+  circleId  String
+  userId    String
+  role      String   // "owner", "member"
+  joinedAt  DateTime @default(now())
+  
+  circle    Circle   @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([circleId, userId])
+  @@index([circleId])
+  @@index([userId])
+}
+
+// NEW: AI Chat Coach messages
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  role      String   // "user" or "assistant"
+  content   String
+  createdAt DateTime @default(now())
+  
+  user      User     @relation("SentMessages", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// NEW: Quick Rituals for emergency use
+model QuickRitual {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  category    String // "Anxiety", "Stress", "Focus", "Energy"
+  duration    Int    // Minutes
+  steps       String // JSON array of quick steps
+  icon        String
+  
+  @@index([category])
+}

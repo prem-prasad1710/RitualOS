@@ -1,0 +1,33 @@
+/**
+ * Global State Management with Zustand
+ * 
+ * Manages authentication state and user data across the application
+ */
+
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { User } from '@/types'
+
+type AuthState = {
+  user: User | null
+  token: string | null
+  isAuthenticated: boolean
+  setAuth: (user: User, token: string) => void
+  logout: () => void
+}
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      setAuth: (user, token) => set({ user, token, isAuthenticated: true }),
+      logout: () => set({ user: null, token: null, isAuthenticated: false })
+    }),
+    {
+      name: 'ritualos-auth'
+    }
+  )
+)
+
