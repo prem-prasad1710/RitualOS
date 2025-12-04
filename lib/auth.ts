@@ -69,3 +69,11 @@ export function getUserFromAuthHeader(authHeader: string | null): TokenPayload |
   return verifyToken(token)
 }
 
+/**
+ * Extract and verify token from NextRequest
+ */
+export function getUserFromRequest(request: Request): TokenPayload | null {
+  const authHeader = request.headers.get('Authorization')
+  return getUserFromAuthHeader(authHeader)
+}
+

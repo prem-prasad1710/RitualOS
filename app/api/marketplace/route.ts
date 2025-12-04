@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken } from '@/lib/auth'
+import { getUserFromRequest } from '@/lib/auth'
 
 /**
  * GET /api/marketplace
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const payload = await verifyToken(request)
+    const payload = getUserFromRequest(request)
     if (!payload) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     const ritual = await prisma.communityRitual.create({
       data: {
-        authorId: payload.id,
+        authorId: payload.userId,
         name,
         description,
         category,

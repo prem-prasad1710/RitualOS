@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { verifyToken } from '@/lib/auth'
+import { getUserFromRequest } from '@/lib/auth'
 
 /**
  * POST /api/challenges/checkin
@@ -8,7 +8,7 @@ import { verifyToken } from '@/lib/auth'
  */
 export async function POST(request: NextRequest) {
   try {
-    const payload = await verifyToken(request)
+    const payload = getUserFromRequest(request)
     if (!payload) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       include: { challenge: true }
     })
 
-    if (!userChallenge || userChallenge.userId !== payload.id) {
+    if (!userChallenge || userChallenge.userId !== payload.userId) {
       return NextResponse.json(
         { error: 'Challenge not found' },
         { status: 404 }
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     // If completed, award points to user
     if (isCompleted) {
       await prisma.user.update({
-        where: { id: payload.id },
+        where: { id: payload.userId },
         data: {
           totalPoints: { increment: userChallenge.challenge.points || 0 }
         }
