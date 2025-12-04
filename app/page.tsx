@@ -23,6 +23,6 @@ export default function HomePage() {
       <WhyDifferent />
       <CTA />
       <Footer />
-    </main>
+      </main>
   )
 }

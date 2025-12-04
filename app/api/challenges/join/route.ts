@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     // Check if user already joined this challenge
     const existingUserChallenge = await prisma.userChallenge.findFirst({
       where: {
-        userId: payload.id,
+        userId: payload.userId,
         challengeId,
         status: { in: ['active', 'completed'] }
       }
