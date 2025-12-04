@@ -28,6 +28,9 @@ export async function GET(request: NextRequest) {
         name: true,
         email: true,
         focusGoal: true,
+        streakCount: true,
+        totalPoints: true,
+        level: true,
         createdAt: true
       }
     })

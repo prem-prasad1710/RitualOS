@@ -50,13 +50,19 @@ export async function POST(request: NextRequest) {
         name,
         email,
         passwordHash,
-        focusGoal: focusGoal || null
+        focusGoal: focusGoal || null,
+        streakCount: 0,
+        totalPoints: 0,
+        level: 1
       },
       select: {
         id: true,
         name: true,
         email: true,
         focusGoal: true,
+        streakCount: true,
+        totalPoints: true,
+        level: true,
         createdAt: true
       }
     })

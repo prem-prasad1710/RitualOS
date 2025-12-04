@@ -50,6 +50,9 @@ export async function POST(request: NextRequest) {
       name: user.name,
       email: user.email,
       focusGoal: user.focusGoal,
+      streakCount: user.streakCount,
+      totalPoints: user.totalPoints,
+      level: user.level,
       createdAt: user.createdAt
     })
 
@@ -59,6 +62,9 @@ export async function POST(request: NextRequest) {
         name: user.name,
         email: user.email,
         focusGoal: user.focusGoal,
+        streakCount: user.streakCount,
+        totalPoints: user.totalPoints,
+        level: user.level,
         createdAt: user.createdAt
       },
       token

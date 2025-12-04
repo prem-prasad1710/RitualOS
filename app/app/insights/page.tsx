@@ -249,7 +249,7 @@ export default function InsightsPage() {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ time, count }) => count > 0 ? `${time}: ${count}` : ''}
+                label={(entry: any) => entry.count > 0 ? `${entry.time}: ${entry.count}` : ''}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="count"
