@@ -101,7 +101,7 @@ async function main() {
     create: {
       email: 'demo@ritualos.com',
       name: 'RitualOS Community',
-      password: '$2a$10$demohashedpasswordnotreal',
+      passwordHash: '$2a$10$demohashedpasswordnotreal',
       focusGoal: 'Share amazing rituals',
       streakCount: 0,
       totalPoints: 0,
