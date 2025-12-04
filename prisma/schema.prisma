@@ -22,14 +22,15 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
-  rituals       Ritual[]
-  ritualLoops   RitualLoop[]
-  sessions      RitualSession[]
-  journalEntries JournalEntry[]
-  achievements   UserAchievement[]
-  challenges     UserChallenge[]
-  circleMembers  CircleMember[]
-  sentMessages   ChatMessage[] @relation("SentMessages")
+  rituals         Ritual[]
+  ritualLoops     RitualLoop[]
+  sessions        RitualSession[]
+  journalEntries  JournalEntry[]
+  achievements    UserAchievement[]
+  challenges      UserChallenge[]
+  circleMembers   CircleMember[]
+  sentMessages    ChatMessage[] @relation("SentMessages")
+  communityRituals CommunityRitual[]
 }
 
 model Ritual {
@@ -161,34 +162,37 @@ model UserAchievement {
 // NEW: Challenges system
 model Challenge {
   id          String   @id @default(cuid())
-  name        String
+  name        String   @unique
   description String
   duration    Int      // Days
-  loopId      String?  // Optional recommended loop
   difficulty  String   // "Easy", "Medium", "Hard"
   points      Int      // Points for completion
-  startDate   DateTime
-  endDate     DateTime
+  goal        String
+  benefits    Json     // Array of benefit strings
+  icon        String
+  color       String
+  createdAt   DateTime @default(now())
   
-  users       UserChallenge[]
-  
-  @@index([startDate])
-  @@index([endDate])
+  userChallenges UserChallenge[]
 }
 
 model UserChallenge {
-  id          String    @id @default(cuid())
-  userId      String
-  challengeId String
-  startedAt   DateTime  @default(now())
-  completedAt DateTime?
-  progress    Int       @default(0) // Days completed
+  id            String    @id @default(cuid())
+  userId        String
+  challengeId   String
+  status        String    @default("active") // "active", "completed", "abandoned"
+  currentStreak Int       @default(0)
+  completedDays Int       @default(0)
+  checkIns      Json      @default("[]") // Array of date strings
+  startedAt     DateTime  @default(now())
+  completedAt   DateTime?
   
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge     Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
   
-  @@unique([userId, challengeId])
   @@index([userId])
+  @@index([challengeId])
+  @@index([status])
 }
 
 // NEW: Social Circles for accountability
@@ -242,4 +246,26 @@ model QuickRitual {
   icon        String
   
   @@index([category])
+}
+
+// NEW: Community Ritual Marketplace
+model CommunityRitual {
+  id           String   @id @default(cuid())
+  authorId     String
+  name         String
+  description  String
+  category     String
+  duration     Int
+  steps        Json
+  authorAvatar String   @default("👤")
+  usesCount    Int      @default(0)
+  rating       Float    @default(0)
+  createdAt    DateTime @default(now())
+  
+  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  @@index([authorId])
+  @@index([category])
+  @@index([createdAt])
+  @@index([rating])
 }
