@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCategoryColor, formatDuration } from '@/lib/utils'
-import { useStore } from '@/lib/store'
+import { useAuthStore } from '@/lib/store'
 import { useRouter } from 'next/navigation'
 
 interface CommunityRitual {
@@ -40,7 +40,7 @@ const sortOptions = [
 
 export default function MarketplacePage() {
   const router = useRouter()
-  const { token } = useStore()
+  const { token } = useAuthStore()
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [sortBy, setSortBy] = useState('popular')
   const [selectedTemplate, setSelectedTemplate] = useState<CommunityRitual | null>(null)

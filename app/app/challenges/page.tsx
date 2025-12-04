@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { useStore } from '@/lib/store'
+import { useAuthStore } from '@/lib/store'
 
 interface Challenge {
   id: string
@@ -38,7 +38,7 @@ interface UserChallenge {
 
 export default function ChallengesPage() {
   const router = useRouter()
-  const { token } = useStore()
+  const { token } = useAuthStore()
   const [activeTab, setActiveTab] = useState<'available' | 'active' | 'completed'>('available')
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null)
   
