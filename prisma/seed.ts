@@ -88,7 +88,10 @@ async function main() {
     await prisma.challenge.upsert({
       where: { name: challenge.name },
       update: {},
-      create: challenge
+      create: {
+        ...challenge,
+        benefits: JSON.stringify(challenge.benefits)
+      }
     })
   }
 
@@ -205,7 +208,10 @@ async function main() {
 
   for (const ritual of communityRituals) {
     await prisma.communityRitual.create({
-      data: ritual
+      data: {
+        ...ritual,
+        steps: JSON.stringify(ritual.steps)
+      }
     })
   }
 

@@ -61,7 +61,12 @@ export default function ChallengesPage() {
       const data = await response.json()
       
       if (data.challenges) {
-        setChallenges(data.challenges)
+        // Parse benefits from JSON string to array
+        const parsedChallenges = data.challenges.map((c: any) => ({
+          ...c,
+          benefits: typeof c.benefits === 'string' ? JSON.parse(c.benefits) : c.benefits
+        }))
+        setChallenges(parsedChallenges)
       }
     } catch (error) {
       console.error('Error fetching challenges:', error)
@@ -82,8 +87,21 @@ export default function ChallengesPage() {
       const data = await response.json()
       
       if (data.active) {
-        setActiveChallenges(data.active)
-        setCompletedChallenges(data.completed)
+        // Parse benefits from JSON string to array
+        const parseChallengeBenefits = (userChallenges: any[]) => 
+          userChallenges.map(uc => ({
+            ...uc,
+            challenge: {
+              ...uc.challenge,
+              benefits: typeof uc.challenge.benefits === 'string' 
+                ? JSON.parse(uc.challenge.benefits) 
+                : uc.challenge.benefits
+            },
+            checkIns: typeof uc.checkIns === 'string' ? JSON.parse(uc.checkIns) : uc.checkIns
+          }))
+        
+        setActiveChallenges(parseChallengeBenefits(data.active))
+        setCompletedChallenges(parseChallengeBenefits(data.completed))
         setStats(data.stats)
       }
     } catch (error) {

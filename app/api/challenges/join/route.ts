@@ -58,8 +58,8 @@ export async function POST(request: NextRequest) {
         challengeId,
         status: 'active',
         currentStreak: 0,
-        completedDays: 0,
-        checkIns: []
+        completedDays: 0
+        // checkIns has default value of "[]" in schema
       },
       include: {
         challenge: true

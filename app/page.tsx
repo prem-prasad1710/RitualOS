@@ -10,6 +10,7 @@ import Problem from '@/components/landing/Problem'
 import Solution from '@/components/landing/Solution'
 import HowItWorks from '@/components/landing/HowItWorks'
 import WhyDifferent from '@/components/landing/WhyDifferent'
+import Testimonials from '@/components/landing/Testimonials'
 import CTA from '@/components/landing/CTA'
 import Footer from '@/components/landing/Footer'
 
@@ -21,6 +22,7 @@ export default function HomePage() {
       <Solution />
       <HowItWorks />
       <WhyDifferent />
+      <Testimonials />
       <CTA />
       <Footer />
       </main>

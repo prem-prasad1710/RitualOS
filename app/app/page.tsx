@@ -11,6 +11,11 @@ import { motion } from 'framer-motion'
 import { useAuthStore } from '@/lib/store'
 import { getGreeting, calculateStreak } from '@/lib/utils'
 import Link from 'next/link'
+import BreathingExercise from '@/components/app/BreathingExercise'
+import MoodTracker from '@/components/app/MoodTracker'
+import AchievementBadges from '@/components/app/AchievementBadges'
+import FocusTimer from '@/components/app/FocusTimer'
+import ProgressVisualization from '@/components/app/ProgressVisualization'
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user)
@@ -19,6 +24,11 @@ export default function DashboardPage() {
   const [loops, setLoops] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [showAIModal, setShowAIModal] = useState(false)
+  const [showBreathing, setShowBreathing] = useState(false)
+  const [showMoodTracker, setShowMoodTracker] = useState(false)
+  const [showAchievements, setShowAchievements] = useState(false)
+  const [showFocusTimer, setShowFocusTimer] = useState(false)
+  const [showProgress, setShowProgress] = useState(false)
 
   useEffect(() => {
     if (token) {
@@ -66,36 +76,89 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 relative">
+      {/* Floating background elements */}
+      <motion.div
+        className="absolute top-20 right-20 w-96 h-96 bg-purple-500 rounded-full blur-3xl opacity-10 pointer-events-none"
+        animate={{
+          y: [0, -30, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{ duration: 8, repeat: Infinity }}
+      />
+      <motion.div
+        className="absolute bottom-20 left-20 w-80 h-80 bg-cyan-500 rounded-full blur-3xl opacity-10 pointer-events-none"
+        animate={{
+          y: [0, 30, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{ duration: 10, repeat: Infinity }}
+      />
+
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
+        className="mb-8 relative z-10"
       >
-        <h1 className="text-4xl font-bold text-white mb-2">
+        <motion.h1
+          className="text-4xl font-bold text-white mb-2"
+          animate={{
+            textShadow: [
+              '0 0 20px rgba(102, 126, 234, 0.3)',
+              '0 0 30px rgba(34, 211, 238, 0.4)',
+              '0 0 20px rgba(102, 126, 234, 0.3)',
+            ],
+          }}
+          transition={{ duration: 3, repeat: Infinity }}
+        >
           {getGreeting()}, {user?.name}
-        </h1>
+        </motion.h1>
         <p className="text-gray-400">
           {user?.focusGoal ? `Focused on ${user.focusGoal}` : 'Ready to create your first ritual?'}
         </p>
       </motion.div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      {/* Stats with 3D card effects */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl p-6 shadow-lg"
+          whileHover={{ 
+            y: -8, 
+            scale: 1.02,
+            rotateX: 5,
+            boxShadow: '0 25px 50px rgba(147, 51, 234, 0.4)',
+          }}
+          className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl p-6 shadow-lg cursor-pointer transform-gpu perspective-1000"
+          style={{ 
+            transformStyle: 'preserve-3d',
+            boxShadow: '0 10px 30px rgba(147, 51, 234, 0.3)',
+          }}
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-purple-200 text-sm mb-1">Ritual Streak</p>
-              <p className="text-4xl font-bold text-white">{streak}</p>
+              <motion.p 
+                className="text-4xl font-bold text-white"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                {streak}
+              </motion.p>
               <p className="text-purple-200 text-sm mt-1">days</p>
             </div>
-            <div className="text-5xl">🔥</div>
+            <motion.div 
+              className="text-5xl"
+              animate={{ 
+                rotate: [0, -10, 10, 0],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+            >
+              🔥
+            </motion.div>
           </div>
         </motion.div>
 
@@ -103,15 +166,40 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-cyan-600 to-cyan-700 rounded-xl p-6 shadow-lg"
+          whileHover={{ 
+            y: -8, 
+            scale: 1.02,
+            rotateX: 5,
+            boxShadow: '0 25px 50px rgba(8, 145, 178, 0.4)',
+          }}
+          className="bg-gradient-to-br from-cyan-600 to-cyan-700 rounded-xl p-6 shadow-lg cursor-pointer transform-gpu"
+          style={{ 
+            transformStyle: 'preserve-3d',
+            boxShadow: '0 10px 30px rgba(8, 145, 178, 0.3)',
+          }}
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-cyan-200 text-sm mb-1">Today's Rituals</p>
-              <p className="text-4xl font-bold text-white">{completedToday}</p>
+              <motion.p 
+                className="text-4xl font-bold text-white"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+              >
+                {completedToday}
+              </motion.p>
               <p className="text-cyan-200 text-sm mt-1">completed</p>
             </div>
-            <div className="text-5xl">✨</div>
+            <motion.div 
+              className="text-5xl"
+              animate={{ 
+                rotate: [0, 15, -15, 0],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              ✨
+            </motion.div>
           </div>
         </motion.div>
 
@@ -119,15 +207,39 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-gradient-to-br from-green-600 to-green-700 rounded-xl p-6 shadow-lg"
+          whileHover={{ 
+            y: -8, 
+            scale: 1.02,
+            rotateX: 5,
+            boxShadow: '0 25px 50px rgba(5, 150, 105, 0.4)',
+          }}
+          className="bg-gradient-to-br from-green-600 to-green-700 rounded-xl p-6 shadow-lg cursor-pointer transform-gpu"
+          style={{ 
+            transformStyle: 'preserve-3d',
+            boxShadow: '0 10px 30px rgba(5, 150, 105, 0.3)',
+          }}
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-200 text-sm mb-1">Total Loops</p>
-              <p className="text-4xl font-bold text-white">{loops.length}</p>
+              <motion.p 
+                className="text-4xl font-bold text-white"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+              >
+                {loops.length}
+              </motion.p>
               <p className="text-green-200 text-sm mt-1">created</p>
             </div>
-            <div className="text-5xl">🔄</div>
+            <motion.div 
+              className="text-5xl"
+              animate={{ 
+                rotate: [0, 360],
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+            >
+              🔄
+            </motion.div>
           </div>
         </motion.div>
       </div>
@@ -137,10 +249,90 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-gray-800 rounded-xl p-6 mb-8"
+        className="bg-gray-800 rounded-xl p-6 mb-8 relative z-10"
+        style={{ boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}
       >
         <h2 className="text-2xl font-bold text-white mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <motion.button
+            whileHover={{ scale: 1.05, y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowBreathing(true)}
+            className="w-full flex flex-col items-center gap-3 p-4 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg text-center relative overflow-hidden group"
+            style={{ boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)' }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+            />
+            <span className="text-4xl z-10">🧘</span>
+            <div className="z-10">
+              <p className="text-white font-semibold">Breathing</p>
+              <p className="text-white/80 text-xs">Calm your mind</p>
+            </div>
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05, y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowMoodTracker(true)}
+            className="w-full flex flex-col items-center gap-3 p-4 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg text-center relative overflow-hidden group"
+            style={{ boxShadow: '0 4px 15px rgba(236, 72, 153, 0.4)' }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+            />
+            <span className="text-4xl z-10">😊</span>
+            <div className="z-10">
+              <p className="text-white font-semibold">Mood Tracker</p>
+              <p className="text-white/80 text-xs">Log your feelings</p>
+            </div>
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05, y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowFocusTimer(true)}
+            className="w-full flex flex-col items-center gap-3 p-4 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg text-center relative overflow-hidden group"
+            style={{ boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)' }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+            />
+            <span className="text-4xl z-10">⏱️</span>
+            <div className="z-10">
+              <p className="text-white font-semibold">Focus Timer</p>
+              <p className="text-white/80 text-xs">Deep work session</p>
+            </div>
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05, y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowAchievements(true)}
+            className="w-full flex flex-col items-center gap-3 p-4 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg text-center relative overflow-hidden group"
+            style={{ boxShadow: '0 4px 15px rgba(234, 179, 8, 0.4)' }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+            />
+            <span className="text-4xl z-10">🏆</span>
+            <div className="z-10">
+              <p className="text-white font-semibold">Achievements</p>
+              <p className="text-white/80 text-xs">View your badges</p>
+            </div>
+          </motion.button>
+        </div>
+
+        {/* Original quick actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
           <Link href="/app/quick-ritual">
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -252,6 +444,88 @@ export default function DashboardPage() {
           </div>
         )}
       </motion.div>
+
+      {/* New Feature Modals */}
+      {showBreathing && (
+        <div className="fixed inset-0 z-50">
+          <BreathingExercise onClose={() => setShowBreathing(false)} />
+        </div>
+      )}
+
+      {showMoodTracker && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4" onClick={() => setShowMoodTracker(false)}>
+          <div className="max-w-4xl mx-auto my-8" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gray-900 rounded-2xl p-6 relative">
+              <button
+                onClick={() => setShowMoodTracker(false)}
+                className="absolute top-4 right-4 w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                ✕
+              </button>
+              <MoodTracker />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFocusTimer && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4" onClick={() => setShowFocusTimer(false)}>
+          <div className="max-w-4xl mx-auto my-8" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gray-900 rounded-2xl p-6 relative">
+              <button
+                onClick={() => setShowFocusTimer(false)}
+                className="absolute top-4 right-4 w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center text-white transition-colors z-10"
+              >
+                ✕
+              </button>
+              <FocusTimer />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAchievements && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4" onClick={() => setShowAchievements(false)}>
+          <div className="max-w-7xl mx-auto my-8" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gray-900 rounded-2xl p-6 relative">
+              <button
+                onClick={() => setShowAchievements(false)}
+                className="absolute top-4 right-4 w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center text-white transition-colors z-10"
+              >
+                ✕
+              </button>
+              <AchievementBadges totalSessions={sessions.length} streak={streak} totalLoops={loops.length} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Progress visualization button */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowProgress(!showProgress)}
+        className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-full shadow-lg flex items-center justify-center text-2xl z-40"
+        style={{ boxShadow: '0 10px 30px rgba(102, 126, 234, 0.5)' }}
+      >
+        📊
+      </motion.button>
+
+      {showProgress && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto p-4" onClick={() => setShowProgress(false)}>
+          <div className="max-w-7xl mx-auto my-8" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gray-900 rounded-2xl p-6 relative">
+              <button
+                onClick={() => setShowProgress(false)}
+                className="absolute top-4 right-4 w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center text-white transition-colors z-10"
+              >
+                ✕
+              </button>
+              <ProgressVisualization sessions={sessions} />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* AI Coach Modal */}
       {showAIModal && (

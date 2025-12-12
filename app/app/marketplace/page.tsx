@@ -74,7 +74,12 @@ export default function MarketplacePage() {
       const data = await response.json()
       
       if (data.rituals) {
-        setRituals(data.rituals)
+        // Parse steps from JSON string to array
+        const parsedRituals = data.rituals.map((r: any) => ({
+          ...r,
+          steps: typeof r.steps === 'string' ? JSON.parse(r.steps) : r.steps
+        }))
+        setRituals(parsedRituals)
       }
     } catch (error) {
       console.error('Error fetching rituals:', error)

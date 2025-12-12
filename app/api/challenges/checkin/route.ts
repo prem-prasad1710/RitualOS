@@ -45,7 +45,9 @@ export async function POST(request: NextRequest) {
 
     // Check if already checked in today
     const today = new Date().toISOString().split('T')[0]
-    const checkIns = (userChallenge.checkIns as string[]) || []
+    const checkIns = typeof userChallenge.checkIns === 'string' 
+      ? JSON.parse(userChallenge.checkIns) 
+      : (userChallenge.checkIns as string[]) || []
     
     if (checkIns.includes(today)) {
       return NextResponse.json(
@@ -73,7 +75,7 @@ export async function POST(request: NextRequest) {
     const updated = await prisma.userChallenge.update({
       where: { id: userChallengeId },
       data: {
-        checkIns: updatedCheckIns,
+        checkIns: JSON.stringify(updatedCheckIns),
         completedDays,
         currentStreak,
         status: isCompleted ? 'completed' : 'active',

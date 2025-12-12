@@ -18,7 +18,7 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated background gradient */}
+      {/* Animated background gradient with 3D effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
         <motion.div
           className="absolute inset-0 opacity-30"
@@ -37,27 +37,54 @@ export default function Hero() {
             ease: 'linear',
           }}
         />
+        
+        {/* 3D floating orbs */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500 rounded-full blur-3xl opacity-20"
+          animate={{
+            y: [0, -50, 0],
+            x: [0, 30, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-3xl opacity-20"
+          animate={{
+            y: [0, 40, 0],
+            x: [0, -40, 0],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+        />
       </div>
 
-      {/* Floating particles */}
+      {/* Enhanced floating particles with 3D effect */}
       {mounted && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(30)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-purple-400 rounded-full"
+              className={`absolute rounded-full ${
+                i % 3 === 0 ? 'w-2 h-2 bg-purple-400' :
+                i % 3 === 1 ? 'w-1.5 h-1.5 bg-cyan-400' :
+                'w-1 h-1 bg-pink-400'
+              }`}
               initial={{
                 x: Math.random() * windowSize.width,
                 y: Math.random() * windowSize.height,
               }}
               animate={{
-                y: [null, Math.random() * -100 - 50],
+                y: [null, Math.random() * -200 - 100],
+                x: [null, Math.random() * 100 - 50],
                 opacity: [0, 1, 0],
+                scale: [0, 1.5, 0],
               }}
               transition={{
-                duration: Math.random() * 3 + 2,
+                duration: Math.random() * 4 + 3,
                 repeat: Infinity,
-                delay: Math.random() * 2,
+                delay: Math.random() * 3,
+                ease: 'easeInOut',
               }}
             />
           ))}
@@ -83,17 +110,32 @@ export default function Hero() {
             </span>
           </motion.div>
 
-          {/* Main headline */}
+          {/* Main headline with 3D text effect */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+            style={{ textShadow: '0 10px 30px rgba(102, 126, 234, 0.4)' }}
           >
             Turn{' '}
-            <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <motion.span
+              className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent inline-block"
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+              style={{
+                backgroundSize: '200% 200%',
+                filter: 'drop-shadow(0 0 20px rgba(102, 126, 234, 0.6))',
+              }}
+            >
               Distracted Time
-            </span>
+            </motion.span>
             <br />
             Into Meaningful Rituals
           </motion.h1>
@@ -118,11 +160,37 @@ export default function Hero() {
           >
             <Link href="/signup">
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: '0 20px 40px rgba(102, 126, 234, 0.6)',
+                }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-purple-500/50 transition-all"
+                animate={{
+                  boxShadow: [
+                    '0 10px 30px rgba(102, 126, 234, 0.3)',
+                    '0 10px 40px rgba(34, 211, 238, 0.4)',
+                    '0 10px 30px rgba(102, 126, 234, 0.3)',
+                  ],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                }}
+                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-semibold rounded-lg shadow-lg relative overflow-hidden group"
               >
-                Start Your First Ritual
+                <span className="relative z-10">Start Your First Ritual</span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                  animate={{
+                    x: ['-100%', '100%'],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                  style={{ filter: 'blur(10px)' }}
+                />
               </motion.button>
             </Link>
             <Link href="#how-it-works">

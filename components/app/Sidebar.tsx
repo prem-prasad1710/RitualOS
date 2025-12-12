@@ -7,7 +7,12 @@ import { useAuthStore } from '@/lib/store'
 
 const navItems = [
   { href: '/app', label: 'Dashboard', icon: '🏠' },
-  { href: '/app/quick-ritual', label: 'Quick Ritual', icon: '⚡', highlight: true },
+  { href: '/app/streaks', label: 'Streaks', icon: '🔥', highlight: true },
+  { href: '/app/planner', label: 'Daily Planner', icon: '📅' },
+  { href: '/app/journal', label: 'Journal', icon: '📝' },
+  { href: '/app/recommendations', label: 'Smart Picks', icon: '🎯', highlight: true },
+  { href: '/app/review', label: 'Weekly Review', icon: '📋' },
+  { href: '/app/quick-ritual', label: 'Quick Ritual', icon: '⚡' },
   { href: '/app/coach', label: 'AI Coach', icon: '🤖' },
   { href: '/app/rituals', label: 'Rituals', icon: '✨' },
   { href: '/app/loops', label: 'Loops', icon: '🔄' },

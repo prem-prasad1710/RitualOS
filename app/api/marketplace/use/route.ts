@@ -44,8 +44,11 @@ export async function POST(request: NextRequest) {
     // Create ritual for user based on template
     // Note: Ritual model doesn't store steps directly, those are for loops
     // We store the community ritual info in the description
-    const stepsInfo = Array.isArray(communityRitual.steps) 
-      ? communityRitual.steps.map((s: any, i: number) => `${i + 1}. ${s.name} (${s.duration}min)`).join('\n')
+    const steps = typeof communityRitual.steps === 'string' 
+      ? JSON.parse(communityRitual.steps) 
+      : communityRitual.steps
+    const stepsInfo = Array.isArray(steps) 
+      ? steps.map((s: any, i: number) => `${i + 1}. ${s.name} (${s.duration}min)`).join('\n')
       : ''
     
     const ritual = await prisma.ritual.create({

@@ -229,3 +229,6 @@ Your RitualOS will be fully functional with:
 
 Need help? Let me know which option you chose and I'll guide you through it! 🚀
 
+
+
+

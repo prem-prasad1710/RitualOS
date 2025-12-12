@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -168,7 +168,7 @@ model Challenge {
   difficulty  String   // "Easy", "Medium", "Hard"
   points      Int      // Points for completion
   goal        String
-  benefits    Json     // Array of benefit strings
+  benefits    String   // JSON string: Array of benefit strings
   icon        String
   color       String
   createdAt   DateTime @default(now())
@@ -183,7 +183,7 @@ model UserChallenge {
   status        String    @default("active") // "active", "completed", "abandoned"
   currentStreak Int       @default(0)
   completedDays Int       @default(0)
-  checkIns      Json      @default("[]") // Array of date strings
+  checkIns      String    @default("[]") // JSON string: Array of date strings
   startedAt     DateTime  @default(now())
   completedAt   DateTime?
   
@@ -256,7 +256,7 @@ model CommunityRitual {
   description  String
   category     String
   duration     Int
-  steps        Json
+  steps        String   // JSON string
   authorAvatar String   @default("👤")
   usesCount    Int      @default(0)
   rating       Float    @default(0)

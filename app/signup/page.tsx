@@ -6,7 +6,7 @@
  * Beautiful, minimal signup experience with smooth animations
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -15,6 +15,8 @@ import { useAuthStore } from '@/lib/store'
 export default function SignupPage() {
   const router = useRouter()
   const setAuth = useAuthStore((state) => state.setAuth)
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const hasHydrated = useAuthStore((state) => state._hasHydrated)
   
   const [formData, setFormData] = useState({
     name: '',
@@ -24,6 +26,13 @@ export default function SignupPage() {
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (hasHydrated && isAuthenticated) {
+      router.push('/app')
+    }
+  }, [hasHydrated, isAuthenticated, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
