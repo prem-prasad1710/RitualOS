@@ -421,3 +421,7 @@ RitualOS is now a **complete, production-ready personal development platform** w
 
 **🎉 RitualOS: Transform your habits into a lifestyle 🎉**
 
+
+
+
+

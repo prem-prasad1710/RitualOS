@@ -392,11 +392,92 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
-      {/* Your Loops */}
+      {/* New Features Highlight */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
+        className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-xl p-6 mb-8 border border-purple-500/30"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              <span className="animate-pulse">✨</span>
+              New Features
+              <span className="px-2 py-1 bg-pink-500 text-white text-xs rounded-full">NEW</span>
+            </h2>
+            <p className="text-gray-300 text-sm">5 powerful new tools to supercharge your practice</p>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <Link href="/app/circles">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -4 }}
+              whileTap={{ scale: 0.98 }}
+              className="p-4 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20 cursor-pointer hover:border-purple-500/50 transition"
+            >
+              <div className="text-4xl mb-2 text-center">🤝</div>
+              <div className="text-white font-semibold text-center text-sm">Circles</div>
+              <div className="text-gray-400 text-xs text-center">Social accountability</div>
+            </motion.div>
+          </Link>
+
+          <Link href="/app/achievements">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -4 }}
+              whileTap={{ scale: 0.98 }}
+              className="p-4 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20 cursor-pointer hover:border-yellow-500/50 transition"
+            >
+              <div className="text-4xl mb-2 text-center">🏅</div>
+              <div className="text-white font-semibold text-center text-sm">Achievements</div>
+              <div className="text-gray-400 text-xs text-center">Unlock badges</div>
+            </motion.div>
+          </Link>
+
+          <Link href="/app/habit-stacks">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -4 }}
+              whileTap={{ scale: 0.98 }}
+              className="p-4 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20 cursor-pointer hover:border-indigo-500/50 transition"
+            >
+              <div className="text-4xl mb-2 text-center">🔗</div>
+              <div className="text-white font-semibold text-center text-sm">Habit Stacks</div>
+              <div className="text-gray-400 text-xs text-center">Chain rituals</div>
+            </motion.div>
+          </Link>
+
+          <Link href="/app/breathing">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -4 }}
+              whileTap={{ scale: 0.98 }}
+              className="p-4 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20 cursor-pointer hover:border-blue-500/50 transition"
+            >
+              <div className="text-4xl mb-2 text-center">🫁</div>
+              <div className="text-white font-semibold text-center text-sm">Breathing</div>
+              <div className="text-gray-400 text-xs text-center">5 techniques</div>
+            </motion.div>
+          </Link>
+
+          <Link href="/app/mood-tracker">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -4 }}
+              whileTap={{ scale: 0.98 }}
+              className="p-4 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20 cursor-pointer hover:border-green-500/50 transition"
+            >
+              <div className="text-4xl mb-2 text-center">😊</div>
+              <div className="text-white font-semibold text-center text-sm">Mood Tracker</div>
+              <div className="text-gray-400 text-xs text-center">Track emotions</div>
+            </motion.div>
+          </Link>
+        </div>
+      </motion.div>
+
+      {/* Your Loops */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
         className="bg-gray-800 rounded-xl p-6"
       >
         <div className="flex items-center justify-between mb-4">

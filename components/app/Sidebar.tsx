@@ -18,6 +18,11 @@ const navItems = [
   { href: '/app/loops', label: 'Loops', icon: '🔄' },
   { href: '/app/challenges', label: 'Challenges', icon: '🏆' },
   { href: '/app/marketplace', label: 'Marketplace', icon: '🏪' },
+  { href: '/app/circles', label: 'Circles', icon: '🤝', highlight: true },
+  { href: '/app/achievements', label: 'Achievements', icon: '🏅', highlight: true },
+  { href: '/app/habit-stacks', label: 'Habit Stacks', icon: '🔗', highlight: true },
+  { href: '/app/breathing', label: 'Breathe', icon: '🫁' },
+  { href: '/app/mood-tracker', label: 'Mood Tracker', icon: '😊' },
   { href: '/app/insights', label: 'Insights', icon: '📊' },
   { href: '/app/settings', label: 'Settings', icon: '⚙️' },
 ]
